@@ -365,7 +365,7 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
 // only implemented for pat::Jet specialization
 template <>
 void SmearedJetProducerT<pat::Jet>::setOrigIndex(pat::Jet& jet, int idx) {
-    jet.addUserInt("origIndex",idx);
+    jet.addUserInt("jerOrigIndex",idx);
 }
 template <>
 void SmearedJetProducerT<pat::Jet>::setFactor(pat::Jet& jet, double fac) {
