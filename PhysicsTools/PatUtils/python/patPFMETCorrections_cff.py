@@ -109,7 +109,7 @@ patSmearedJets = cms.EDProducer("SmearedPATJetProducer",
 
     enabled = cms.bool(True),  # If False, no smearing is performed
 
-    store_factor = cms.bool(False),
+    store_factor = cms.uint32(0),
 
     rho = cms.InputTag("fixedGridRhoFastjetAll"),
 
