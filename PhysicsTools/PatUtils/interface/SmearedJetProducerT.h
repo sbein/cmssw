@@ -155,7 +155,7 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
             }
 
             if(m_store_factor) produces<edm::ValueMap<float>>();
-            else produces<JetCollection>();
+            produces<JetCollection>();
         }
 
         static void fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
@@ -227,7 +227,11 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
                 m_genJetMatcher->getTokens(event);
 
             auto smearedJets = std::make_unique<JetCollection>();
+            smearedJets->reserve(jets.size());
             auto jerUncVec  = std::make_unique<std::vector<double>>();
+            if(m_store_factor){
+                jerUncVec->reserve(jets.size());
+            }
 
             int idx = 0;
             for (const auto& jet: jets) {
@@ -235,9 +239,14 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
                 setOrigIndex(smearedJet, idx);
                 ++idx;
 
+                double smearFactor = 1.;
+
                 if ((! m_enabled) || (jet.pt() == 0)) {
                     // Module disabled or invalid p4. Simply copy the input jet.
                     smearedJets->push_back(smearedJet);
+                    if(m_store_factor){
+                        jerUncVec->push_back(smearFactor);
+                    }
 
                     continue;
                 }
@@ -254,8 +263,6 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
                 const reco::GenJet* genJet = nullptr;
                 if (m_genJetMatcher)
                     genJet = m_genJetMatcher->match(jet, jet.pt() * jet_resolution);
-
-                double smearFactor = 1.;
 
                 if (genJet) {
                     /*
@@ -298,7 +305,6 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
 
                 if(m_store_factor){
                     jerUncVec->push_back(smearFactor);
-                    continue;
                 }
 
                 smearedJet.scaleEnergy(smearFactor);
@@ -318,12 +324,10 @@ class SmearedJetProducerT : public edm::stream::EDProducer<> {
                 filler.fill();
                 event.put(std::move(out),"");
             }
-            else {
-                // Sort jets by pt
-                std::sort(smearedJets->begin(), smearedJets->end(), jetPtComparator);
+            // Sort jets by pt
+            std::sort(smearedJets->begin(), smearedJets->end(), jetPtComparator);
 
-                event.put(std::move(smearedJets));
-            }
+            event.put(std::move(smearedJets));
         }
 
     private:
