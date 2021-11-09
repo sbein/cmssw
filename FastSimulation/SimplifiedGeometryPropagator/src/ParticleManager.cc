@@ -229,6 +229,11 @@ std::unique_ptr<fastsim::Particle> fastsim::ParticleManager::nextGenParticle() {
       continue;
     }
 
+    if (productionVertex->position().perp2() * lengthUnitConversionFactor2_ < beamPipeRadius2_ &&
+	endVertex && endVertex->position().perp2() * lengthUnitConversionFactor2_ > beamPipeRadius2_) {
+      isExotic(exoticRelativeId);
+    }    
+
     // make the particle
     std::unique_ptr<Particle> newParticle(
         new Particle(particle.pdg_id(),
