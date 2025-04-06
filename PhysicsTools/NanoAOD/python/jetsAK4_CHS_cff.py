@@ -67,8 +67,6 @@ finalJets = cms.EDFilter("PATJetRefSelector",
 
 
 ##################### Tables for final output and docs ##########################
-
-
 jetTable = simplePATJetFlatTableProducer.clone(
     src = cms.InputTag("linkedObjects","jets"),
     name = cms.string("Jet"),
