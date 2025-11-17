@@ -312,6 +312,9 @@ def nanoAOD_customizeCommon(process):
     # Add lepton time-life info
     from PhysicsTools.NanoAOD.leptonTimeLifeInfo_common_cff import addTimeLifeInfoBase
     process = addTimeLifeInfoBase(process)
+    
+    process = nanoAOD_refineFastSim_puppiJet(process)
+    process = nanoAOD_refineFastSim_bTagDeepFlav(process, nanoAOD_addDeepInfoAK4CHS_switch.nanoAOD_addDeepFlavourTag_switch)
 
     return process
 
