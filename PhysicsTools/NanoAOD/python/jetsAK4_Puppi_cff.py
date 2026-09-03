@@ -220,6 +220,7 @@ jetPuppiTask = cms.Task(jetPuppiCorrFactorsNano,updatedJetsPuppi,jetPuppiUserDat
 jetPuppiTablesTask = cms.Task(jetPuppiTable)
 
 from Configuration.Eras.Modifier_fastSim_cff import fastSim
+from Configuration.Eras.Modifier_stage2L1Trigger_2024_cff import stage2L1Trigger_2024
 from PhysicsTools.NanoAOD.common_cff import Var, ExtVar
 
 def nanoAOD_refineFastSim_puppiJet(process):
@@ -278,6 +279,10 @@ def nanoAOD_refineFastSim_puppiJet(process):
             "btagDeepFlavBrefined","btagDeepFlavCvBrefined","btagDeepFlavCvLrefined","btagDeepFlavQGrefined",
             "btagUParTAK4Brefined","btagUParTAK4CvBrefined","btagUParTAK4CvLrefined","btagUParTAK4QvGrefined",),
         outputFormulas   = cms.vstring("at(0)","at(1)","at(2)","at(3)","at(4)","at(5)","at(6)","at(7)","at(8)"),
+    )
+    stage2L1Trigger_2024.toModify(
+        process.puppiJetRefineNN,
+        weightFile = cms.FileInPath("PhysicsTools/NanoAOD/data/fastSimPuppiJetRefineNN_RunIII2024_v15_T1tttt_NoCast16_25Aug2026.onnx"),
     )
     fastSim.toModify(process.jetPuppiTablesTask, process.jetPuppiTablesTask.add(process.puppiJetRefineNN))
 
